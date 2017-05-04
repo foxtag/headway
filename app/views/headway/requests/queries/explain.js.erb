@@ -1,0 +1,1 @@
+$("#query-<%= @query.id %> .query-explain").removeClass("hidden").find(".query-explain-pre").html("<%= j highlight_explain_query("#{@query.explain}") %>");

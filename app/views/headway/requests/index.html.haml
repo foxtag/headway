@@ -1,0 +1,18 @@
+%table.u-full-width
+  %thead
+    %tr
+      %th Controller
+      %th Action
+      %th Queries
+      %th Duration
+      %th Executed
+      %th
+  %tbody
+    - @requests.order_by_recency.limit(30).each do |request|
+      %tr
+        %td= request.controller
+        %td= request.action
+        %td= request.count_queries
+        %td #{request.total_query_duration}ms
+        %td= l request.started_at, format: :short
+        %td= link_to "Show", request

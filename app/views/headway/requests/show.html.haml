@@ -1,0 +1,48 @@
+%h2 #{@request.controller} <i class='fa fa-hashtag'></i>#{@request.action}
+%i{ style: "display: block; margin: -20px 0 20px;" }= l @request.started_at, format: :short
+
+%b Queries:
+= @request.count_queries
+%br
+%b Duration:
+#{@request.total_query_duration}ms
+%br
+%br
+%br
+
+- @request.queries.order_by_recency.each do |query|
+  .query{ id: "query-#{query.id}" }
+    %span{ style: "margin-right: 30px;" }
+      .fa.fa-fw.fa-repeat
+      #{query.count}&times;
+    %span
+      .fa.fa-fw.fa-clock-o
+      #{query.duration}ms
+
+    .query-sql.pre
+      .pre-title
+        .fa.fa-fw.fa-code
+        SQL
+      .query-sql-pre.pre-pre= query.sql
+
+    - if query.binds.any?
+      .query-binds.pre
+        .pre-title
+          .fa.fa-fw.fa-gears
+          Binds
+        .query-binds-pre.pre-pre= query.binds.map { |attribute, value| "#{attribute}: #{value}" }.join(", ")
+
+    .query-explain.pre
+      .pre-title
+        .fa.fa-fw.fa-search
+        = link_to "Run Explain Analyze", explain_request_query_url(request_id: @request.id, id: query.id), remote: true, method: :put
+      .query-explain-pre.pre-pre.pre-code
+
+    - if query.trace.any?
+      .query-trace.pre
+        .pre-title
+          .fa.fa-fw.fa-file-o
+          Caller
+        .query-trace-pre.pre-pre.pre-code= query.trace.uniq.join("\n")
+    %br
+    %br
