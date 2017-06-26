@@ -1,4 +1,4 @@
-class CreateHeadwayQuery < ActiveRecord::Migration
+class CreateHeadwayQuery < ActiveRecord::Migration[4.2]
   def change
     create_table :headway_queries, id: :uuid do |t|
       t.uuid :request_id,  null: false
